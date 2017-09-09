@@ -2,67 +2,48 @@
 
 COMMAND=$1
 WORD=$2
-par=$3
-name="./proba.sh"
-invalid="For help write $name -h'"
+PAR=$3
+NAME="./proba.sh"
+INVALID="For help write $NAME -h'"
 
-echo
-
-if [ "$COMMAND" = "-h" ]
+if [ "$PAR" = "" ]
 then
-	echo HOW TO USE
-	echo -s "<word>"
-	echo -h
-elif [ "$COMMAND" = "-s" ]
-then
-	if [ "$WORD" = "" ]
+	echo T U $PAR K
+	if [ "$COMMAND" = "-h" ]
 	then
-		echo Need more arguments...
-		echo $invalid
-	elif [ "$par" = "" ]
+		echo HOW TO USE
+		echo -s "<WORD>" Search for WORD in each file.
+		echo -h Output a ussage message. 
+	elif [ "$COMMAND" = "-s" ]
 	then
-		echo Start searching...
-		grep -Hrnw "$WORD" ./* | while read res
-		do
-			path=`echo "$res" | cut -d: -f1`
-			line=`echo "$res" | cut -d: -f2`
-			git blame -e -p -L $line,$line $path | head -n 3 | tail -n 1 | cut -d '<' -f2 | cut -d '>' -f1
-		done
+		if [ "$WORD" = "" ]
+		then
+			echo Need more arguments...
+			echo $INVALID
+		else
+			echo Start searching...
+			echo
 
-		#path=`grep -Hrw "$WORD" ./* | cut -d: -f1`
-		#line=`grep -hrnw "$WORD" ./* | cut -d: -f1`
-		
-		#IFS=' ' read -r -a array <<< "$line"
+			grep -Hrnw "$WORD" ./* --exclude-from .gitignore | while [ read res ]
+			do
+				path=`echo "$res" | cut -d: -f1`
+				line=`echo "$res" | cut -d: -f2`
+				email=`git blame -e -p -L $line,$line $path | head -n 3 | tail -n 1 | cut -d '<' -f2 | cut -d '>' -f1`
 
-		#echo TUK
-		#echo "${array[0]}"
-		#echo "${array[1]}"
-		#echo ASD
-		#for element in "${array[@]}"
-		#do
-			#echo "$element"
-		#done
+				echo ${email}:${res};
+			done
 
-		#echo TAM
+			echo
+			echo DONE
 
-
-		#echo $path
-		#echo $line
-
-		#otg=`cut $line -d ' ' -f 1`
-
-		echo DONE
+		fi
 	else
-		echo Too many arguments...
-		echo $invalid
-	fi	
-elif [ "$COMAND" = "" ]
-then
-	echo Need arguments...
-	echo $invalid
+		echo Unknown arguments...
+		echo $INVALID
+	fi
 else
-	echo Unknown arguments...
-	echo $invalid
+	echo Too many arguments...
+	echo $INVALID
 fi
 
 echo

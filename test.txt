@@ -1,7 +1,0 @@
-grep -r -I -l -e "main" ./*
-grep -r -I -n -w "main" ./* | cut -f2 -d:
-
-git blame -e -L 30,30 src/main/Main.java | cut -d ' ' -f3 | cut -d$'(' -f2 | cut -d$'<' -f2 | cut -d$'>' -f1
-
-git blame -e -L 30,30 ./src/main/Main.java --porcelain  | head -n 3 | tail -n 1 | cut -d '<' -f2 | cut -d '>' -f1
-
